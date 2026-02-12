@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register Game</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1>Register Game</h1>
+      <p>Flip or shift the register using the move buttons.</p>
+    </header>
+
+    <section class="register" aria-live="polite" aria-label="Register slots">
+      <!-- Slots injected by script -->
+    </section>
+
+    <section class="status" aria-live="polite" aria-label="Game status"></section>
+    <section class="solution" aria-live="polite" aria-label="Solution hint"></section>
+
+    <section class="controls" aria-label="Move controls">
+      <button type="button" id="move-1">Move 1: Flip first half</button>
+      <button type="button" id="move-2">Move 2: Flip second half</button>
+      <button type="button" id="move-3">Move 3: Right shift (cycle)</button>
+      <button type="button" id="move-4">Move 4: Left shift (cycle)</button>
+      <button type="button" id="move-5">Move 5: Flip first two + last two</button>
+      <button type="button" id="solve">Show solution</button>
+      <button type="button" id="reset">Reset</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
