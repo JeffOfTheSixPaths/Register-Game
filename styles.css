@@ -19,6 +19,58 @@ body {
   color: #1a1e2a;
 }
 
+.home-screen {
+  width: min(600px, 100%);
+  background: #ffffffcc;
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 30px 60px rgba(31, 38, 135, 0.2);
+  text-align: center;
+}
+
+.home-screen h1 {
+  font-size: clamp(2rem, 3vw + 1.2rem, 3rem);
+  margin-bottom: 1rem;
+  color: #1a1e2a;
+}
+
+.home-screen p {
+  font-size: 1.1rem;
+  color: #4d5670;
+  margin-bottom: 2rem;
+}
+
+.group-buttons {
+  display: grid;
+  gap: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.group-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 1.2rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: #4361ee;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.group-btn:hover {
+  background: #3651d4;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(67, 97, 238, 0.3);
+}
+
+.group-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
 .app {
   width: min(900px, 100%);
   background: #ffffffcc;

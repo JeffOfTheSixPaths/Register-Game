@@ -1,6 +1,15 @@
 const SLOT_COUNT = 10;
 const HALF = SLOT_COUNT / 2;
-const INITIAL_STATE =  "1000100110".split("").map(Number); //"1010001101".split("").map(Number); 5415
+
+const GROUP_STATES = {
+  p1: "1000100110".split("").map(Number), // 1325
+  p2: "1101100010".split("").map(Number), // 2545
+  p3: "0111011001".split("").map(Number), // 1315
+  p4: "1011000101".split("").map(Number), // 5325
+  p5: "0100010011".split("").map(Number), // 1542
+};
+
+let INITIAL_STATE = null;
 // 1101100010 2545
 // 0111011001 1315
 // 1011000101 5325
@@ -12,6 +21,8 @@ const INITIAL_STATE =  "1000100110".split("").map(Number); //"1010001101".split(
 // 1000100110 1325
 
 
+const homeScreen = document.getElementById("home-screen");
+const gameScreen = document.getElementById("game-screen");
 const registerEl = document.querySelector(".register");
 const statusEl = document.querySelector(".status");
 const solutionEl = document.querySelector(".solution");
@@ -27,6 +38,7 @@ const move4Btn = document.getElementById("move-4");
 const move5Btn = document.getElementById("move-5");
 const solveBtn = document.getElementById("solve");
 const resetBtn = document.getElementById("reset");
+const groupBtns = document.querySelectorAll(".group-btn");
 
 const moveLabels = {
   1: "Move 1",
@@ -279,13 +291,35 @@ solveBtn.addEventListener("click", () => {
 answerForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const value = answerInput.value.trim();
-  if (value === "5415") {
-    setAnswerStatus(true);
-    answerForm.classList.remove("shake");
-    answerDetails.textContent =
-      "";
+  
+  // Parse the input as a sequence of moves
+  const moveSequence = value.split("").map(Number).filter(n => n >= 1 && n <= 5);
+  
+  if (moveSequence.length === 0) {
+    setAnswerStatus(false);
+    answerForm.classList.add("shake");
+    window.setTimeout(() => {
+      answerForm.classList.remove("shake");
+    }, 400);
     return;
   }
+  
+  // Apply the moves to a copy of the current register
+  let testState = [...register];
+  for (const move of moveSequence) {
+    testState = applyMove(testState, move);
+  }
+  
+  // Check if the result is all 1s (win state)
+  const isCorrect = testState.every(value => value === 1);
+  
+  if (isCorrect) {
+    setAnswerStatus(true);
+    answerForm.classList.remove("shake");
+    answerDetails.textContent = "";
+    return;
+  }
+  
   setAnswerStatus(false);
   answerForm.classList.add("shake");
   window.setTimeout(() => {
@@ -305,5 +339,14 @@ resetBtn.addEventListener("click", () => {
   renderRegister();
 });
 
-renderRegister();
-renderHistory();
+groupBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const group = btn.dataset.group;
+    INITIAL_STATE = GROUP_STATES[group];
+    register = createInitialRegister();
+    homeScreen.style.display = "none";
+    gameScreen.style.display = "grid";
+    renderRegister();
+    renderHistory();
+  });
+});
