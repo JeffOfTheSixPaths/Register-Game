@@ -1,10 +1,25 @@
 const SLOT_COUNT = 10;
 const HALF = SLOT_COUNT / 2;
-const INITIAL_STATE = null //"1010001101".split('').map(Number); //null;
+const INITIAL_STATE =  "1000100110".split("").map(Number); //"1010001101".split("").map(Number); 5415
+// 1101100010 2545
+// 0111011001 1315
+// 1011000101 5325
+
+// 1000110000 4245
+
+// 0100010011 1542  THIS HAS ALL UNIQUE MOVES IN SOLUTION 
+//uniques
+// 1000100110 1325
+
 
 const registerEl = document.querySelector(".register");
 const statusEl = document.querySelector(".status");
 const solutionEl = document.querySelector(".solution");
+const historyListEl = document.querySelector(".history-list");
+const answerForm = document.getElementById("answer-form");
+const answerInput = document.getElementById("answer-input");
+const answerStatus = document.getElementById("answer-status");
+const answerDetails = document.getElementById("answer-details");
 const move1Btn = document.getElementById("move-1");
 const move2Btn = document.getElementById("move-2");
 const move3Btn = document.getElementById("move-3");
@@ -13,7 +28,16 @@ const move5Btn = document.getElementById("move-5");
 const solveBtn = document.getElementById("solve");
 const resetBtn = document.getElementById("reset");
 
+const moveLabels = {
+  1: "Move 1",
+  2: "Move 2",
+  3: "Move 3",
+  4: "Move 4",
+  5: "Move 5",
+};
+
 let register = createInitialRegister();
+let moveHistory = [];
 
 function createInitialRegister() {
   if (Array.isArray(INITIAL_STATE) && INITIAL_STATE.length === SLOT_COUNT) {
@@ -93,6 +117,46 @@ function clearSolution() {
   solutionEl.textContent = "";
 }
 
+function renderHistory() {
+  historyListEl.innerHTML = "";
+  if (moveHistory.length === 0) {
+    const empty = document.createElement("li");
+    empty.textContent = "No moves yet.";
+    historyListEl.appendChild(empty);
+    return;
+  }
+  moveHistory.forEach((move, index) => {
+    const item = document.createElement("li");
+    item.textContent = `${moveLabels[move]}`;
+    historyListEl.appendChild(item);
+  });
+}
+
+function addMoveToHistory(move) {
+  moveHistory.push(move);
+  if (moveHistory.length > 5) {
+    moveHistory = moveHistory.slice(-5);
+  }
+  renderHistory();
+}
+
+function resetHistory() {
+  moveHistory = [];
+  renderHistory();
+}
+
+function setAnswerStatus(isCorrect) {
+  answerStatus.textContent = isCorrect ? "✓" : "✕";
+  answerStatus.classList.toggle("correct", isCorrect);
+  answerStatus.classList.toggle("wrong", !isCorrect);
+}
+
+function clearAnswerStatus() {
+  answerStatus.textContent = "";
+  answerStatus.classList.remove("correct", "wrong");
+  answerDetails.textContent = "";
+}
+
 function applyMove(state, move) {
   const next = state.slice();
   if (move === 1) {
@@ -170,26 +234,31 @@ function reconstructPath(visited, endKey) {
 
 move1Btn.addEventListener("click", () => {
   flipRange(0, HALF);
+  addMoveToHistory(1);
   renderRegister();
 });
 
 move2Btn.addEventListener("click", () => {
   flipRange(HALF, SLOT_COUNT);
+  addMoveToHistory(2);
   renderRegister();
 });
 
 move3Btn.addEventListener("click", () => {
   rightShiftCycle();
+  addMoveToHistory(3);
   renderRegister();
 });
 
 move4Btn.addEventListener("click", () => {
   leftShiftCycle();
+  addMoveToHistory(4);
   renderRegister();
 });
 
 move5Btn.addEventListener("click", () => {
   flipFirstTwoLastTwo();
+  addMoveToHistory(5);
   renderRegister();
 });
 
@@ -203,20 +272,38 @@ solveBtn.addEventListener("click", () => {
     solutionEl.textContent = "Already solved!";
     return;
   }
-  const moveLabels = {
-    1: "Move 1",
-    2: "Move 2",
-    3: "Move 3",
-    4: "Move 4",
-    5: "Move 5",
-  };
   const steps = solution.map((move) => moveLabels[move]).join(" → ");
   solutionEl.textContent = `Solution (${solution.length} moves): ${steps}`;
 });
 
+answerForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const value = answerInput.value.trim();
+  if (value === "5415") {
+    setAnswerStatus(true);
+    answerForm.classList.remove("shake");
+    answerDetails.textContent =
+      "";
+    return;
+  }
+  setAnswerStatus(false);
+  answerForm.classList.add("shake");
+  window.setTimeout(() => {
+    answerForm.classList.remove("shake");
+  }, 400);
+});
+
+answerInput.addEventListener("input", () => {
+  clearAnswerStatus();
+  answerForm.classList.remove("shake");
+});
+
 resetBtn.addEventListener("click", () => {
   register = createInitialRegister();
+  resetHistory();
+  clearAnswerStatus();
   renderRegister();
 });
 
 renderRegister();
+renderHistory();

@@ -8,9 +8,16 @@
 </head>
 <body>
   <main class="app">
+    <section class="move-history" aria-live="polite" aria-label="Move history">
+      <h2>Move History (last five moves)</h2>
+      <ol class="history-list"></ol>
+    </section>
+
     <header class="header">
       <h1>Register Game</h1>
       <p>Flip or shift the register using the move buttons.</p>
+      <p>Use the least number of moves, and the answer is the sequence of the moves used</p>
+      <p>Move 4 into move 3 would be 43</p>
     </header>
 
     <section class="register" aria-live="polite" aria-label="Register slots">
@@ -29,8 +36,28 @@
       <button type="button" id="solve">Show solution</button>
       <button type="button" id="reset">Reset</button>
     </section>
+
+    <form class="answer-form" id="answer-form" novalidate>
+      <label for="answer-input">Enter solution code</label>
+      <div class="answer-row">
+        <input
+          id="answer-input"
+          name="answer"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          placeholder="e.g. 4343"
+          maxlength="10"
+          aria-describedby="answer-status"
+        />
+        <button type="submit">Check</button>
+        <span id="answer-status" class="answer-status" aria-live="polite"></span>
+      </div>
+    </form>
+    <p class="answer-details" id="answer-details" aria-live="polite"></p>
   </main>
 
   <script src="script.js"></script>
+  
 </body>
 </html>
