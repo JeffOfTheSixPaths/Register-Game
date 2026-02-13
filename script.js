@@ -75,6 +75,7 @@ const moveLabels = {
 };
 
 let register = createInitialRegister();
+let initialRegister = register.slice();
 let moveHistory = [];
 
 function createInitialRegister() {
@@ -363,8 +364,8 @@ answerForm.addEventListener("submit", (event) => {
     return;
   }
   
-  // Apply the moves to a copy of the current register
-  let testState = [...register];
+  // Apply the moves to a copy of the initial register
+  let testState = [...initialRegister];
   for (const move of moveSequence) {
     testState = applyMove(testState, move);
   }
@@ -402,7 +403,8 @@ answerInput.addEventListener("input", () => {
 });
 
 resetBtn.addEventListener("click", () => {
-  register = createInitialRegister();
+  initialRegister = createInitialRegister();
+  register = initialRegister.slice();
   resetHistory();
   clearAnswerStatus();
   allSolutionsEl.innerHTML = "";
@@ -455,7 +457,8 @@ groupBtns.forEach((btn) => {
     const group = btn.dataset.group;
     currentGroup = group;
     INITIAL_STATE = GROUP_STATES[group];
-    register = createInitialRegister();
+    initialRegister = createInitialRegister();
+    register = initialRegister.slice();
     homeScreen.style.display = "none";
     gameScreen.style.display = "grid";
     
