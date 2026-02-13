@@ -276,6 +276,35 @@ body {
   white-space: pre-line;
 }
 
+.answer-table {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.answer-table table {
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(26, 30, 42, 0.08);
+}
+
+.answer-table th,
+.answer-table td {
+  border: 1px solid #e1e6ff;
+  padding: 0.4rem 0.6rem;
+  min-width: 32px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #2d3658;
+}
+
+.answer-table th {
+  background: #f4f6ff;
+  font-weight: 700;
+}
+
 @keyframes shake {
   0% { transform: translateX(0); }
   25% { transform: translateX(-6px); }

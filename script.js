@@ -1,6 +1,6 @@
 const SLOT_COUNT = 10;
 const HALF = SLOT_COUNT / 2;
-const SHOW_SOLUTION_BUTTONS = true; // Set to false to hide solution and check-all buttons
+const SHOW_SOLUTION_BUTTONS = false; // Set to false to hide solution and check-all buttons
 
 const GROUP_STATES = {
   p1: "1000100110".split("").map(Number), // 1325
@@ -19,6 +19,17 @@ const GROUP_SOLUTION_CODES = {
   p5: "1542",
   p6: "5415",
 };
+
+const ANSWER_TABLE_DATA = [
+  ["1111", "G", "1113", "1114", "1115", "T", "1117", "1118"],
+  ["1121", "1122", "1123", "1124", "O", "1126", "1127", "1128"],
+  ["1131", "1132", "1133", "1134", "1135", "1136", "1137", "1138"],
+  ["1141", "1142", "1143", "1144", "1145", "1146", "1147", "1148"],
+  ["1151", "R", "S", "1154", "1155", "N", "1157", "1158"],
+  ["1161", "1162", "1163", "1164", "1165", "E", "1167", "1168"],
+  ["1171", "1172", "1173", "1174", "1175", "1176", "1177", "1178"],
+  ["1181", "1182", "1183", "1184", "1185", "1186", "1187", "1188"],
+]
 
 let INITIAL_STATE = null;
 let currentGroup = null;
@@ -43,6 +54,7 @@ const answerForm = document.getElementById("answer-form");
 const answerInput = document.getElementById("answer-input");
 const answerStatus = document.getElementById("answer-status");
 const answerDetails = document.getElementById("answer-details");
+const answerTableEl = document.getElementById("answer-table");
 const move1Btn = document.getElementById("move-1");
 const move2Btn = document.getElementById("move-2");
 const move3Btn = document.getElementById("move-3");
@@ -181,6 +193,39 @@ function clearAnswerStatus() {
   answerStatus.textContent = "";
   answerStatus.classList.remove("correct", "wrong");
   answerDetails.textContent = "";
+  answerTableEl.innerHTML = "";
+}
+
+function renderAnswerTable() {
+  const table = document.createElement("table");
+  const headerRow = document.createElement("tr");
+  const corner = document.createElement("th");
+  corner.textContent = "";
+  headerRow.appendChild(corner);
+
+  for (let col = 1; col <= 8; col += 1) {
+    const th = document.createElement("th");
+    th.textContent = col;
+    headerRow.appendChild(th);
+  }
+  table.appendChild(headerRow);
+
+  for (let row = 1; row <= 8; row += 1) {
+    const tr = document.createElement("tr");
+    const rowHeader = document.createElement("th");
+    rowHeader.textContent = row;
+    tr.appendChild(rowHeader);
+    for (let col = 1; col <= 8; col += 1) {
+      const td = document.createElement("td");
+      const value = ANSWER_TABLE_DATA[row - 1]?.[col - 1] ?? "";
+      td.textContent = value;
+      tr.appendChild(td);
+    }
+    table.appendChild(tr);
+  }
+
+  answerTableEl.innerHTML = "";
+  answerTableEl.appendChild(table);
 }
 
 function applyMove(state, move) {
@@ -335,7 +380,12 @@ answerForm.addEventListener("submit", (event) => {
     const modResult = digitSum % 10;
     answerDetails.textContent =
       `${digitsDisplay} = ${digitSum} (mod 10) = ${modResult}\n` +
-      `Answer: ${modResult}`;
+      `Answer: ${modResult} \n`+
+      `Your answer is the row of the table. The column will be given by the next player's answer.\n`+
+      `P1 gets it from P2. P2 gets it from P3, and so on. P6 gets it from P1.\n`+
+      `Suppose P1 gets 1, and P2 gets 2, then you look at (1,2) to get the letter G.\n`+
+      `Combine the letters you get from the table to form a word. This is the final solution.\n P1's letter comes first and P6's last.`;
+    renderAnswerTable();
     return;
   }
   
