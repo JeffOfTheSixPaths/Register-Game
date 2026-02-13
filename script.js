@@ -1,13 +1,14 @@
 const SLOT_COUNT = 10;
 const HALF = SLOT_COUNT / 2;
-const SHOW_SOLUTION_BUTTONS = false; // Set to false to hide solution and check-all buttons
+const SHOW_SOLUTION_BUTTONS = true; // Set to false to hide solution and check-all buttons
 
 const GROUP_STATES = {
   p1: "1000100110".split("").map(Number), // 1325
   p2: "1101100010".split("").map(Number), // +
-  p3: "0111011001".split("").map(Number), // 1315
+  p3: "1000110000".split("").map(Number), // 1315
   p4: "1011000101".split("").map(Number), // 5325
   p5: "0100010011".split("").map(Number), // 1542
+  p6: "1010001101".split("").map(Number), // 5415
 };
 
 const GROUP_SOLUTION_CODES = {
@@ -16,6 +17,7 @@ const GROUP_SOLUTION_CODES = {
   p3: "1315",
   p4: "5325",
   p5: "1542",
+  p6: "5415",
 };
 
 let INITIAL_STATE = null;
@@ -23,7 +25,7 @@ let currentGroup = null;
 // 1101100010 2545
 // 0111011001 1315
 // 1011000101 5325
-
+// 1010001101
 // 1000110000 4245
 
 // 0100010011 1542  THIS HAS ALL UNIQUE MOVES IN SOLUTION 
@@ -328,11 +330,12 @@ answerForm.addEventListener("submit", (event) => {
   if (isCorrect) {
     setAnswerStatus(true);
     answerForm.classList.remove("shake");
-    if (currentGroup && GROUP_SOLUTION_CODES[currentGroup]) {
-      answerDetails.textContent = `Code: ${GROUP_SOLUTION_CODES[currentGroup]}`;
-    } else {
-      answerDetails.textContent = "";
-    }
+    const digitSum = moveSequence.reduce((sum, digit) => sum + digit, 0);
+    const digitsDisplay = moveSequence.join(" + ");
+    const modResult = digitSum % 10;
+    answerDetails.textContent =
+      `${digitsDisplay} = ${digitSum} (mod 10) = ${modResult}\n` +
+      `Answer: ${modResult}`;
     return;
   }
   
