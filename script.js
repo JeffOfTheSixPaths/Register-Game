@@ -1,15 +1,25 @@
 const SLOT_COUNT = 10;
 const HALF = SLOT_COUNT / 2;
+const SHOW_SOLUTION_BUTTONS = false; // Set to false to hide solution and check-all buttons
 
 const GROUP_STATES = {
   p1: "1000100110".split("").map(Number), // 1325
-  p2: "1101100010".split("").map(Number), // 2545
+  p2: "1101100010".split("").map(Number), // +
   p3: "0111011001".split("").map(Number), // 1315
   p4: "1011000101".split("").map(Number), // 5325
   p5: "0100010011".split("").map(Number), // 1542
 };
 
+const GROUP_SOLUTION_CODES = {
+  p1: "1325",
+  p2: "2545",
+  p3: "1315",
+  p4: "5325",
+  p5: "1542",
+};
+
 let INITIAL_STATE = null;
+let currentGroup = null;
 // 1101100010 2545
 // 0111011001 1315
 // 1011000101 5325
@@ -38,6 +48,8 @@ const move4Btn = document.getElementById("move-4");
 const move5Btn = document.getElementById("move-5");
 const solveBtn = document.getElementById("solve");
 const resetBtn = document.getElementById("reset");
+const checkAllBtn = document.getElementById("check-all");
+const allSolutionsEl = document.getElementById("all-solutions");
 const groupBtns = document.querySelectorAll(".group-btn");
 
 const moveLabels = {
@@ -118,7 +130,7 @@ function updateStatus() {
   const won = isWin();
   statusEl.textContent = won
     ? "You win! All slots are 1."
-    : "Goal: Turn all slots into 1.";
+    : "";
   [move1Btn, move2Btn, move3Btn, move4Btn, move5Btn].forEach((button) => {
     button.disabled = won;
   });
@@ -316,7 +328,11 @@ answerForm.addEventListener("submit", (event) => {
   if (isCorrect) {
     setAnswerStatus(true);
     answerForm.classList.remove("shake");
-    answerDetails.textContent = "";
+    if (currentGroup && GROUP_SOLUTION_CODES[currentGroup]) {
+      answerDetails.textContent = `Code: ${GROUP_SOLUTION_CODES[currentGroup]}`;
+    } else {
+      answerDetails.textContent = "";
+    }
     return;
   }
   
@@ -336,16 +352,69 @@ resetBtn.addEventListener("click", () => {
   register = createInitialRegister();
   resetHistory();
   clearAnswerStatus();
+  allSolutionsEl.innerHTML = "";
   renderRegister();
+});
+
+checkAllBtn.addEventListener("click", () => {
+  allSolutionsEl.innerHTML = "<p>Checking all combinations from 1111 to 9999...</p>";
+  
+  // Use setTimeout to allow UI to update before processing
+  setTimeout(() => {
+    const workingSolutions = [];
+    
+    for (let num = 1111; num <= 9999; num++) {
+      const numStr = num.toString();
+      const moveSequence = numStr.split("").map(Number).filter(n => n >= 1 && n <= 5);
+      
+      // Skip if any digit is 0, 6, 7, 8, or 9
+      if (moveSequence.length !== 4) continue;
+      
+      // Apply the moves to a copy of the current register
+      let testState = [...register];
+      for (const move of moveSequence) {
+        testState = applyMove(testState, move);
+      }
+      
+      // Check if the result is all 1s (win state)
+      if (testState.every(value => value === 1)) {
+        workingSolutions.push(numStr);
+      }
+    }
+    
+    // Display results
+    if (workingSolutions.length === 0) {
+      allSolutionsEl.innerHTML = "<p>No solutions found in range 1111-9999.</p>";
+    } else {
+      let html = `<h3>Found ${workingSolutions.length} working solution(s):</h3>`;
+      html += '<div class="solutions-list">';
+      workingSolutions.forEach(sol => {
+        html += `<span class="solution-item">${sol}</span>`;
+      });
+      html += '</div>';
+      allSolutionsEl.innerHTML = html;
+    }
+  }, 100);
 });
 
 groupBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
     const group = btn.dataset.group;
+    currentGroup = group;
     INITIAL_STATE = GROUP_STATES[group];
     register = createInitialRegister();
     homeScreen.style.display = "none";
     gameScreen.style.display = "grid";
+    
+    // Show/hide solution buttons based on config
+    if (SHOW_SOLUTION_BUTTONS) {
+      solveBtn.style.display = "";
+      checkAllBtn.style.display = "";
+    } else {
+      solveBtn.style.display = "none";
+      checkAllBtn.style.display = "none";
+    }
+    
     renderRegister();
     renderHistory();
   });

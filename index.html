@@ -27,9 +27,19 @@
 
     <header class="header">
       <h1>Register Game</h1>
-      <p>Flip or shift the register using the move buttons.</p>
-      <p>Use the least number of moves, and the answer is the sequence of the moves used</p>
-      <p>Move 4 into move 3 would be 43</p>
+      <details class="instructions">
+        <summary>Instructions</summary>
+        <div class="instructions-content">
+          <h3>Goal: Turn all slots into 1.</h3>
+          <ul>
+            <li>Flip or shift the register using the given move buttons.</li>
+            <li>You have to use the least number of moves to achieve the goal.</li>
+            <li>The answer is the sequence of moves used as a number without spaces.</li>
+            <li>For example, if the solution is Move 4 followed by Move 3, enter "43".</li>
+            <li>Hint: the solution is 4 numbers long.</li>
+          </ul>
+        </div>
+      </details>
     </header>
 
     <section class="register" aria-live="polite" aria-label="Register slots">
@@ -46,8 +56,11 @@
       <button type="button" id="move-4">Move 4: Left shift (cycle)</button>
       <button type="button" id="move-5">Move 5: Flip first two + last two</button>
       <button type="button" id="solve">Show solution</button>
+      <button type="button" id="check-all">Find all solutions (1111-9999)</button>
       <button type="button" id="reset">Reset</button>
     </section>
+
+    <section class="all-solutions" id="all-solutions" aria-live="polite"></section>
 
     <form class="answer-form" id="answer-form" novalidate>
       <label for="answer-input">Enter solution code</label>
@@ -59,7 +72,7 @@
           inputmode="numeric"
           autocomplete="off"
           placeholder="e.g. 4343"
-          maxlength="10"
+          maxlength="5"
           aria-describedby="answer-status"
         />
         <button type="submit">Check</button>
