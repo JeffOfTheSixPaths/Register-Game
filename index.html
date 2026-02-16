@@ -6,7 +6,7 @@
   <title>Register Game</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="light">
   <section class="home-screen" id="home-screen">
     <h1>Register Game</h1>
     <p>Select your group to start:</p>
@@ -27,7 +27,10 @@
     </section>
 
     <header class="header">
-      <h1>Register Game</h1>
+      <div class="header-row">
+        <h1>Register Game</h1>
+        <button type="button" id="theme-toggle" class="theme-toggle">Dark mode</button>
+      </div>
       <details class="instructions">
         <summary>Instructions</summary>
         <div class="instructions-content">
@@ -82,6 +85,22 @@
     </form>
     <p class="answer-details" id="answer-details" aria-live="polite"></p>
     <div class="answer-table" id="answer-table" aria-live="polite"></div>
+    <form class="word-form hidden" id="word-form" novalidate>
+      <label for="word-input">Enter final word (case insensitive)</label>
+      <div class="answer-row">
+        <input
+          id="word-input"
+          name="word"
+          type="text"
+          autocomplete="off"
+          placeholder="e.g. Matrix"
+          aria-describedby="word-status"
+        />
+        <button type="submit">Check Word</button>
+        <span id="word-status" class="answer-status" aria-live="polite"></span>
+      </div>
+    </form>
+    <div class="thor-logo" id="thor-logo" aria-live="polite"></div>
   </main>
 
   <script src="script.js"></script>

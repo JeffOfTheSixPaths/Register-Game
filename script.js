@@ -55,6 +55,11 @@ const answerInput = document.getElementById("answer-input");
 const answerStatus = document.getElementById("answer-status");
 const answerDetails = document.getElementById("answer-details");
 const answerTableEl = document.getElementById("answer-table");
+const themeToggle = document.getElementById("theme-toggle");
+const wordForm = document.getElementById("word-form");
+const wordInput = document.getElementById("word-input");
+const wordStatus = document.getElementById("word-status");
+const thorLogo = document.getElementById("thor-logo");
 const move1Btn = document.getElementById("move-1");
 const move2Btn = document.getElementById("move-2");
 const move3Btn = document.getElementById("move-3");
@@ -195,6 +200,11 @@ function clearAnswerStatus() {
   answerStatus.classList.remove("correct", "wrong");
   answerDetails.textContent = "";
   answerTableEl.innerHTML = "";
+  wordStatus.textContent = "";
+  wordStatus.classList.remove("correct", "wrong");
+  wordInput.value = "";
+  thorLogo.innerHTML = "";
+  wordForm.classList.add("hidden");
 }
 
 function renderAnswerTable() {
@@ -387,6 +397,7 @@ answerForm.addEventListener("submit", (event) => {
       `Suppose P1 gets 1, and P2 gets 2, then you look at (1,2) to get the letter G.\n`+
       `Combine the letters you get from the table to form a word. This is the final solution.\n P1's letter comes first and P6's last.`;
     renderAnswerTable();
+    wordForm.classList.remove("hidden");
     return;
   }
   
@@ -400,6 +411,22 @@ answerForm.addEventListener("submit", (event) => {
 answerInput.addEventListener("input", () => {
   clearAnswerStatus();
   answerForm.classList.remove("shake");
+});
+
+wordForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const normalized = wordInput.value.replace(/\s+/g, "").toLowerCase();
+  if (normalized === "tensor") {
+    wordStatus.textContent = "✓";
+    wordStatus.classList.add("correct");
+    wordStatus.classList.remove("wrong");
+    thorLogo.innerHTML = '<img src="thor-logo.svg" alt="Thor logo" />';
+  } else {
+    wordStatus.textContent = "✕";
+    wordStatus.classList.add("wrong");
+    wordStatus.classList.remove("correct");
+    thorLogo.innerHTML = "";
+  }
 });
 
 resetBtn.addEventListener("click", () => {
@@ -475,3 +502,11 @@ groupBtns.forEach((btn) => {
     renderHistory();
   });
 });
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("light");
+    const isLight = document.body.classList.contains("light");
+    themeToggle.textContent = isLight ? "Dark mode" : "Light mode";
+  });
+}
