@@ -362,10 +362,23 @@ body {
 }
 
 .answer-details {
-  text-align: center;
+  text-align: left;
   color: #dfe6ff;
   font-weight: 600;
-  white-space: pre-line;
+  margin-top: 0.5rem;
+}
+
+.answer-details-title {
+  font-size: 1.25rem;
+  margin: 0 0 0.4rem 0;
+  color: #f1f5ff;
+}
+
+.answer-details-list {
+  margin: 0 0 0 1rem;
+  padding: 0;
+  list-style: disc;
+  color: #dfe6ff;
 }
 
 .answer-table {

@@ -413,13 +413,16 @@ answerForm.addEventListener("submit", (event) => {
     const digitSum = moveSequence.reduce((sum, digit) => sum + digit, 0);
     const digitsDisplay = moveSequence.join(" + ");
     const modResult = digitSum % 10;
-    answerDetails.textContent =
-      `${digitsDisplay} = ${digitSum} (mod 10) = ${modResult}\n` +
-      `Answer: ${modResult} \n`+
-      `Use (Row, Column) to find each letter in the table.\n`+
-      `Row = your solution; Column = next player's solution (P1 uses P2, P6 uses P1)\n`+
-      `Each player gets one letter. Combine the letters from P1 to P6 to form the final solution.\n`+
-      `Example: If P1's solution is 1 and P2's is 2, check cell (1,2) in the table to get the letter 'G'.`;
+    answerDetails.innerHTML = `
+      <center><h2 class="answer-details-title">${digitsDisplay} = ${digitSum} (mod 10) = ${modResult} </h2> <h2>Answer: ${modResult}</h2>
+      <ul class="answer-details-list"> </center>
+      <br/>
+        <li>Use (Row, Column) to find each letter in the table.</li>
+        <li>Row = your solution; Column = next player's solution (P1 uses P2, P6 uses P1).</li>
+        <li>Each player gets one letter. Combine the letters from P1 to P6 to form the final solution.</li>
+        <li>Example: If P1's solution is 1 and P2's is 2, check cell (1,2) in the table to get the letter 'G'.</li>
+      </ul>
+    `;
     renderAnswerTable();
     wordForm.classList.remove("hidden");
     return;
