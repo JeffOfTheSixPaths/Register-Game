@@ -6,7 +6,7 @@ const SHOW_SOLUTION_BUTTONS = false; // Set to false to hide solution and check-
 
 const GROUP_STATES = {
   p1: "1000100110".split("").map(Number), // 1325
-  p2: "1101100010".split("").map(Number), // +
+  p2: "1101100010".split("").map(Number), // 2545
   p3: "1000110000".split("").map(Number), // 1315
   p4: "1011000101".split("").map(Number), // 5325
   p5: "0100010011".split("").map(Number), // 1542
