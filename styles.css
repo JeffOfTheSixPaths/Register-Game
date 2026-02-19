@@ -130,7 +130,8 @@ body {
   padding-left: 0;
   color: #b8c0da;
   font-size: 1.5rem;
-  height: 6.6rem;
+  /* height to fit 5 items: 5 * font-size + 4 * gap */
+  height: calc(5 * 1.5rem + 4 * 0.4rem);
   overflow-y: auto;
 }
 

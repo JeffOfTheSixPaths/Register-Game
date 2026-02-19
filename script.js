@@ -198,7 +198,7 @@ function resetHistory() {
 
 function sendBump() {
   try {
-    const socket = new WebSocket("ws://10.4.8.233:8787");
+    const socket = new WebSocket`("ws://10.4.8.233:8787");`
     socket.addEventListener("open", () => {
       socket.send("bump");
       socket.close();
