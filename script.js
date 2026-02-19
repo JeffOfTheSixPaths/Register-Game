@@ -1,3 +1,5 @@
+// HEY! WHY ARE YOU LOOKING IN HERE?? CHEATER!!
+
 const SLOT_COUNT = 10;
 const HALF = SLOT_COUNT / 2;
 const SHOW_SOLUTION_BUTTONS = false; // Set to false to hide solution and check-all buttons
@@ -66,6 +68,7 @@ const move3Btn = document.getElementById("move-3");
 const move4Btn = document.getElementById("move-4");
 const move5Btn = document.getElementById("move-5");
 const solveBtn = document.getElementById("solve");
+const undoBtn = document.getElementById("undo");
 const resetBtn = document.getElementById("reset");
 const checkAllBtn = document.getElementById("check-all");
 const allSolutionsEl = document.getElementById("all-solutions");
@@ -80,8 +83,10 @@ const moveLabels = {
 };
 
 let register = createInitialRegister();
+console.log("Initial register state:", register.join(""));
 let initialRegister = register.slice();
 let moveHistory = [];
+let stateHistory = [register.slice()];
 
 function createInitialRegister() {
   if (Array.isArray(INITIAL_STATE) && INITIAL_STATE.length === SLOT_COUNT) {
@@ -108,7 +113,7 @@ function renderRegister() {
   registerEl.innerHTML = "";
   register.forEach((value, index) => {
     const slot = document.createElement("div");
-    slot.className = "slot";
+    slot.className = index < 5 ? "slot slot-first-half" : "slot slot-second-half";
     slot.dataset.value = value;
     slot.setAttribute("role", "gridcell");
     slot.setAttribute("aria-label", `Slot ${index + 1} value ${value}`);
@@ -169,6 +174,7 @@ function renderHistory() {
     historyListEl.appendChild(empty);
     return;
   }
+  // Display all moves (up to 5)
   moveHistory.forEach((move, index) => {
     const item = document.createElement("li");
     item.textContent = `${moveLabels[move]}`;
@@ -186,7 +192,20 @@ function addMoveToHistory(move) {
 
 function resetHistory() {
   moveHistory = [];
+  stateHistory = [register.slice()];
   renderHistory();
+}
+
+function sendBump() {
+  try {
+    const socket = new WebSocket("ws://10.4.8.233:8787");
+    socket.addEventListener("open", () => {
+      socket.send("bump");
+      socket.close();
+    });
+  } catch (error) {
+    // Ignore connection failures in environments without a websocket server.
+  }
 }
 
 function setAnswerStatus(isCorrect) {
@@ -317,30 +336,35 @@ function reconstructPath(visited, endKey) {
 move1Btn.addEventListener("click", () => {
   flipRange(0, HALF);
   addMoveToHistory(1);
+  stateHistory.push(register.slice());
   renderRegister();
 });
 
 move2Btn.addEventListener("click", () => {
   flipRange(HALF, SLOT_COUNT);
   addMoveToHistory(2);
+  stateHistory.push(register.slice());
   renderRegister();
 });
 
 move3Btn.addEventListener("click", () => {
   rightShiftCycle();
   addMoveToHistory(3);
+  stateHistory.push(register.slice());
   renderRegister();
 });
 
 move4Btn.addEventListener("click", () => {
   leftShiftCycle();
   addMoveToHistory(4);
+  stateHistory.push(register.slice());
   renderRegister();
 });
 
 move5Btn.addEventListener("click", () => {
   flipFirstTwoLastTwo();
   addMoveToHistory(5);
+  stateHistory.push(register.slice());
   renderRegister();
 });
 
@@ -392,10 +416,10 @@ answerForm.addEventListener("submit", (event) => {
     answerDetails.textContent =
       `${digitsDisplay} = ${digitSum} (mod 10) = ${modResult}\n` +
       `Answer: ${modResult} \n`+
-      `Your answer is the row of the table. The column will be given by the next player's answer.\n`+
-      `P1 gets it from P2. P2 gets it from P3, and so on. P6 gets it from P1.\n`+
-      `Suppose P1 gets 1, and P2 gets 2, then you look at (1,2) to get the letter G.\n`+
-      `Combine the letters you get from the table to form a word. This is the final solution.\n P1's letter comes first and P6's last.`;
+      `Use (Row, Column) to find each letter in the table.\n`+
+      `Row = your solution; Column = next player's solution (P1 uses P2, P6 uses P1)\n`+
+      `Each player gets one letter. Combine the letters from P1 to P6 to form the final solution.\n`+
+      `Example: If P1's solution is 1 and P2's is 2, check cell (1,2) in the table to get the letter 'G'.`;
     renderAnswerTable();
     wordForm.classList.remove("hidden");
     return;
@@ -420,12 +444,25 @@ wordForm.addEventListener("submit", (event) => {
     wordStatus.textContent = "✓";
     wordStatus.classList.add("correct");
     wordStatus.classList.remove("wrong");
-    thorLogo.innerHTML = '<img src="thor-logo.svg" alt="Thor logo" />';
+    thorLogo.innerHTML = 'Great job!! Now look at the monitor!';
+    sendBump();
   } else {
     wordStatus.textContent = "✕";
     wordStatus.classList.add("wrong");
     wordStatus.classList.remove("correct");
     thorLogo.innerHTML = "";
+  }
+});
+
+undoBtn.addEventListener("click", () => {
+  if (stateHistory.length > 1) {
+    stateHistory.pop();
+    register = stateHistory[stateHistory.length - 1].slice();
+    if (moveHistory.length > 0) {
+      moveHistory.pop();
+    }
+    renderHistory();
+    renderRegister();
   }
 });
 
@@ -486,6 +523,8 @@ groupBtns.forEach((btn) => {
     INITIAL_STATE = GROUP_STATES[group];
     initialRegister = createInitialRegister();
     register = initialRegister.slice();
+    stateHistory = [register.slice()];
+    moveHistory = [];
     homeScreen.style.display = "none";
     gameScreen.style.display = "grid";
     

@@ -6,7 +6,12 @@
   <title>Register Game</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="light">
+<body>
+  <div class="top-bar">
+    <img src="thor-logo.svg" alt="Thor logo" class="top-bar-logo" />
+    <img src="matrix-logo.webp" alt="Matrix logo" class="top-bar-logo" style="transform:translateY(5px)" />
+    
+  </div>
   <section class="home-screen" id="home-screen">
     <h1>Register Game</h1>
     <p>Select your group to start:</p>
@@ -28,19 +33,18 @@
 
     <header class="header">
       <div class="header-row">
-        <h1>Goal: change everything to a 1</h1>
-        <button type="button" id="theme-toggle" class="theme-toggle">Dark mode</button>
+        <h1>Goal: change every bit to a 1</h1>
+        <button type="button" id="theme-toggle" class="theme-toggle">Light mode</button>
       </div>
       <details class="instructions">
         <summary>Instructions</summary>
         <div class="instructions-content">
-          <h3>Goal: Turn all slots into 1.</h3>
+          
           <ul>
             <li>Flip or shift the register using the given move buttons.</li>
             <li>You have to use the least number of moves to achieve the goal.</li>
-            <li>The answer is the sequence of moves used as a number without spaces.</li>
-            <li>For example, if the solution is Move 4 followed by Move 3, enter "43".</li>
-            <li>Hint: the solution is 4 numbers long.</li>
+            <li>Type the 4-move sequence as a single 4-digit number (first to last)</li>
+            <li>Hint: the solution is 4 numbers long and the submission box is at the bottom</li>
           </ul>
         </div>
       </details>
@@ -61,6 +65,7 @@
       <button type="button" id="move-5">Move 5: Flip first two + last two</button>
       <button type="button" id="solve">Show solution</button>
       <button type="button" id="check-all">Find all solutions (1111-9999)</button>
+      <button type="button" id="undo">Undo</button>
       <button type="button" id="reset">Reset</button>
     </section>
 
