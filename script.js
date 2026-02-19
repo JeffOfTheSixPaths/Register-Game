@@ -5,12 +5,12 @@ const HALF = SLOT_COUNT / 2;
 const SHOW_SOLUTION_BUTTONS = false; // Set to false to hide solution and check-all buttons
 
 const GROUP_STATES = {
-  p1: "1000100110".split("").map(Number), // 1325
-  p2: "1101100010".split("").map(Number), // 2545
-  p3: "1000110000".split("").map(Number), // 1315
-  p4: "1011000101".split("").map(Number), // 5325
-  p5: "0100010011".split("").map(Number), // 1542
-  p6: "1010001101".split("").map(Number), // 5415
+  p1: "1000100110".split("").map(Number), // 1325 1
+  p2: "1101100010".split("").map(Number), // 2545 6
+  p3: "1000110000".split("").map(Number), // 1315 5 
+  p4: "1011000101".split("").map(Number), // 5325 5
+  p5: "0100010011".split("").map(Number), // 1542 2
+  p6: "1010001101".split("").map(Number), // 5415 5
 };
 
 const GROUP_SOLUTION_CODES = {
@@ -27,8 +27,8 @@ const ANSWER_TABLE_DATA = [
   ["N", "I", "X", "N", "O", "W", "O", "T"],
   ["E", "A", "H", "A", "E", "H", "C", "I"],
   ["F", "D", "E", "B", "M", "F", "A", "S"],
-  ["E", "R", "S", "E", "G", "N", "H", "I"],
-  ["W", "A", "K", "O", "T", "E", "U", "Z"],
+  ["R", "S", "E", "E", "N", "G", "H", "I"],
+  ["W", "A", "K", "O", "E", "T", "U", "Z"],
   ["V", "H", "S", "Q", "D", "A", "M", "N"],
   ["O", "T", "J", "R", "I", "E", "E", "P"],
 ]
